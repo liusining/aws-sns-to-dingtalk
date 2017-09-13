@@ -3,8 +3,9 @@ require 'json'
 require 'sinatra/json'
 require 'sinatra/reloader' if development?
 require 'rest-client'
-require 'env'
+require_relative 'env.rb'
 
+set :bind, '0.0.0.0'
 set :server, "thin"
 set :robot, Config::ROBOT
 
