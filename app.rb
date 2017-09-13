@@ -3,13 +3,12 @@ require 'json'
 require 'sinatra/json'
 require 'sinatra/reloader' if development?
 require 'rest-client'
-require_relative '.env'
+require 'env'
 
 set :server, "thin"
 set :robot, Config::ROBOT
 
 before do
-  request.body.rewind
   @request_body = JSON.parse request.body.read
 end
 
