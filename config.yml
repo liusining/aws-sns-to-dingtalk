@@ -1,0 +1,12 @@
+ environment: production
+ chdir: .
+ address: 127.0.0.1
+ port: 4567
+ pid: /tmp/pids/thin.pid
+ rackup: ./config.ru
+ log: ./log/thin.log
+ max_conns: 1024
+ timeout: 30
+ servers: 1
+ max_persistent_conns: 512
+ daemonize: true

@@ -5,6 +5,7 @@ require 'sinatra/reloader' if development?
 require 'rest-client'
 require_relative '.env'
 
+set :server, "thin"
 set :robot, Config::ROBOT
 
 before do
