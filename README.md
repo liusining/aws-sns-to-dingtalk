@@ -26,7 +26,7 @@ bundle exec rakeup config.ru -p 4567 -s thin -o 0.0.0.0
 
 ```shell
 docker build -t aws-sns-to-dingtalk .
-docker run -p 4567:4567 -d aws-sns-to-dingtalk
+docker run -p 4567:4567 -d --name=aws-sns-to-dingtalk aws-sns-to-dingtalk:latest
 ```
 
 ## Reference
