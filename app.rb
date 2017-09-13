@@ -5,7 +5,6 @@ require 'sinatra/reloader' if development?
 require 'rest-client'
 require_relative 'env.rb'
 
-set :bind, '0.0.0.0'
 set :server, "thin"
 set :robot, Config::ROBOT
 
@@ -27,7 +26,11 @@ before do
   end
 end
 
-post '/aws/codedeploy-bluegreen' do
+post '/test', :agent => /^Paw/ do
+  json test: request.env
+end
+
+post '/aws', :agent => /^Amazon/ do
   robot_message = {
      "msgtype": "markdown",
      "markdown": {
