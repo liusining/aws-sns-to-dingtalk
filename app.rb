@@ -36,7 +36,7 @@ post '/aws', :agent => /^Amazon/ do
      "markdown": {
          "title": @subject,
          "text": "### #{@subject}\n" +
-                 "> #{@message}\n\n" +
+                 "> #{@message.to_json.gsub(',', ",\n")}\n\n" +
                  "> ###### 时间 #{@time}"
      },
     "at": {
