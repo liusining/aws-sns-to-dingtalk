@@ -47,6 +47,7 @@ post '/aws', :agent => /^Amazon/ do
         "isAtAll": false
     }
   }
-  RestClient.post settings.robot, robot_message.to_json, {content_type: :json, accept: :json}
+  response = RestClient.post settings.robot, robot_message.to_json, {content_type: :json, accept: :json}
+  logger.info "Sent to dingtalk: #{robot_message["markdown"]["title"]}. Get status: #{response.code} and body: #{response.body}"
   status = 200
 end
