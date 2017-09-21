@@ -35,7 +35,7 @@ post '/aws', :agent => /^Amazon/ do
   robot_message = {
      "msgtype": "markdown",
      "markdown": {
-         "title": @subject,
+         "title": @subject || "AWS Send You An Alarm",
          "text": "### #{@subject}\n" +
                  @message.inject("") {|words, pair| words += "> **#{pair[0]}**: #{pair[1]} \n\n"} +
                  "> ###### 时间 #{@time}"
