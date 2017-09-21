@@ -10,6 +10,7 @@ set :robot, Config::ROBOT
 
 before do
   @request_body = JSON.parse request.body.read
+  logger.info "Receive request body : #{@request_body}"
 end
 
 before do
@@ -21,7 +22,7 @@ end
 before do
   if request.env['HTTP_X_AMZ_SNS_MESSAGE_TYPE'] == 'Notification'
     @subject = @request_body["Subject"]
-    @message = @request_body["Message"]
+    @message = JSON.parse @request_body["Message"]
     @time = @request_body["Timestamp"]
   end
 end
