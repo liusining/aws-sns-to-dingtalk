@@ -24,7 +24,7 @@ class Message
     if self.type
       content.inject("") {|words, pair| words += "> **#{pair[0]}**: #{pair[1]} \n\n"}
     else
-      content
+      "> #{content}"
     end
   end
 end
