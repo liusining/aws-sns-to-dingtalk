@@ -9,11 +9,24 @@ set :server, "thin"
 set :robot, Config::ROBOT
 
 class Message
-  def self.parse(message)
-    logger.info 'Parsing a piece of message'
-    JSON.parse(message).inject("") {|words, pair| words += "> **#{pair[0]}**: #{pair[1]} \n\n"}
-  rescue
-    message
+  attr_reader :content, :type
+  PARSED_CONTENT = 1
+
+  def initialize(message)
+    @content = JSON.parse(message)
+    @type = PARSED_CONTENT
+  rescue => ex
+    logger.info ex.to_s
+    @content = message
+    @type = nil
+  end
+
+  def parse
+    if self.type
+      content.inject("") {|words, pair| words += "> **#{pair[0]}**: #{pair[1]} \n\n"}
+    else
+      content
+    end
   end
 end
 
@@ -31,7 +44,7 @@ end
 before do
   if request.env['HTTP_X_AMZ_SNS_MESSAGE_TYPE'] == 'Notification'
     @subject = @request_body["Subject"]
-    @message = @request_body["Message"]
+    @message = Message.new(@request_body["Message"])
     @time = @request_body["Timestamp"]
   end
 end
@@ -46,7 +59,7 @@ post '/aws', :agent => /^Amazon/ do
      "markdown": {
          "title": @subject || "AWS Send You An Alarm",
          "text": "### #{@subject}\n" +
-                 Message.parse(@message) +
+                 "#{@message.parse}" +
                  "> ###### 时间 #{@time}"
      },
     "at": {
