@@ -8,6 +8,15 @@ require_relative 'env.rb'
 set :server, "thin"
 set :robot, Config::ROBOT
 
+class Message
+  def self.parse(message)
+    logger.info 'Parsing a piece of message'
+    JSON.parse(message).inject("") {|words, pair| words += "> **#{pair[0]}**: #{pair[1]} \n\n"}
+  rescue
+    message
+  end
+end
+
 before do
   @request_body = JSON.parse request.body.read
   logger.info "Receive request body : #{@request_body}"
@@ -22,13 +31,13 @@ end
 before do
   if request.env['HTTP_X_AMZ_SNS_MESSAGE_TYPE'] == 'Notification'
     @subject = @request_body["Subject"]
-    @message = JSON.parse @request_body["Message"]
+    @message = @request_body["Message"]
     @time = @request_body["Timestamp"]
   end
 end
 
 post '/test', :agent => /^Paw/ do
-  json test: request.env
+  json test: Message.parse(request.env)
 end
 
 post '/aws', :agent => /^Amazon/ do
@@ -37,7 +46,7 @@ post '/aws', :agent => /^Amazon/ do
      "markdown": {
          "title": @subject || "AWS Send You An Alarm",
          "text": "### #{@subject}\n" +
-                 @message.inject("") {|words, pair| words += "> **#{pair[0]}**: #{pair[1]} \n\n"} +
+                 Message.parse(@message) +
                  "> ###### 时间 #{@time}"
      },
     "at": {
