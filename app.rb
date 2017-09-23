@@ -16,7 +16,6 @@ class Message
     @content = JSON.parse(message)
     @type = PARSED_CONTENT
   rescue => ex
-    logger.info ex.to_s
     @content = message
     @type = nil
   end
